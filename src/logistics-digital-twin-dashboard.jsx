@@ -16,16 +16,16 @@ const RATE_MASTER = { "2t": 18000, "4t": 25000, "10t": 42000 };
 // ---- 手配実績モックデータ（週次・10納品先）----
 // optFactor: 同日同一エリア名寄せによる巡回距離削減係数（0.70〜0.82 ≒ ▲18〜30%）
 const SHIPMENTS = [
-  { id: 1,  dest: "イオン 北関東DC",        area: "埼玉",   route: "埼玉ルートA",   vehicle: "4t",  trips: 5, revenue: 480000, distPerTrip: 85, optFactor: 0.70, variance: true  },
-  { id: 2,  dest: "セブン&アイ 川口センター", area: "埼玉",   route: "埼玉ルートA",   vehicle: "4t",  trips: 5, revenue: 420000, distPerTrip: 78, optFactor: 0.70, variance: false },
-  { id: 3,  dest: "カインズ 熊谷店",         area: "埼玉",   route: "埼玉ルートB",   vehicle: "2t",  trips: 3, revenue: 210000, distPerTrip: 95, optFactor: 0.78, variance: true  },
-  { id: 4,  dest: "ヤオコー 大宮物流C",      area: "埼玉",   route: "埼玉ルートA",   vehicle: "2t",  trips: 4, revenue: 300000, distPerTrip: 72, optFactor: 0.72, variance: false },
-  { id: 5,  dest: "コストコ 幕張倉庫",       area: "千葉",   route: "千葉ルートC",   vehicle: "10t", trips: 5, revenue: 520000, distPerTrip: 60, optFactor: 0.74, variance: false },
-  { id: 6,  dest: "マルエツ 船橋DC",         area: "千葉",   route: "千葉ルートC",   vehicle: "4t",  trips: 4, revenue: 310000, distPerTrip: 55, optFactor: 0.74, variance: true  },
-  { id: 7,  dest: "ベイシア 柏センター",     area: "千葉",   route: "千葉ルートD",   vehicle: "4t",  trips: 3, revenue: 240000, distPerTrip: 68, optFactor: 0.80, variance: false },
-  { id: 8,  dest: "サミット 横浜港北C",      area: "神奈川", route: "神奈川ルートE", vehicle: "4t",  trips: 5, revenue: 450000, distPerTrip: 48, optFactor: 0.72, variance: false },
-  { id: 9,  dest: "オーケー 川崎DC",         area: "神奈川", route: "神奈川ルートE", vehicle: "4t",  trips: 4, revenue: 330000, distPerTrip: 42, optFactor: 0.72, variance: true  },
-  { id: 10, dest: "ロピア 相模原センター",   area: "神奈川", route: "神奈川ルートF", vehicle: "2t",  trips: 2, revenue: 160000, distPerTrip: 88, optFactor: 0.82, variance: false },
+  { id: 1,  dest: "小売X社 北関東DC",       area: "埼玉",   route: "埼玉ルートA",   vehicle: "4t",  trips: 5, revenue: 480000, distPerTrip: 85, optFactor: 0.70, variance: true  },
+  { id: 2,  dest: "小売Y社 川口センター",   area: "埼玉",   route: "埼玉ルートA",   vehicle: "4t",  trips: 5, revenue: 420000, distPerTrip: 78, optFactor: 0.70, variance: false },
+  { id: 3,  dest: "量販Z社 熊谷店",         area: "埼玉",   route: "埼玉ルートB",   vehicle: "2t",  trips: 3, revenue: 210000, distPerTrip: 95, optFactor: 0.78, variance: true  },
+  { id: 4,  dest: "食品スーパーP社 大宮物流C", area: "埼玉", route: "埼玉ルートA",   vehicle: "2t",  trips: 4, revenue: 300000, distPerTrip: 72, optFactor: 0.72, variance: false },
+  { id: 5,  dest: "卸売Q社 幕張倉庫",       area: "千葉",   route: "千葉ルートC",   vehicle: "10t", trips: 5, revenue: 520000, distPerTrip: 60, optFactor: 0.74, variance: false },
+  { id: 6,  dest: "食品スーパーR社 船橋DC", area: "千葉",   route: "千葉ルートC",   vehicle: "4t",  trips: 4, revenue: 310000, distPerTrip: 55, optFactor: 0.74, variance: true  },
+  { id: 7,  dest: "量販S社 柏センター",     area: "千葉",   route: "千葉ルートD",   vehicle: "4t",  trips: 3, revenue: 240000, distPerTrip: 68, optFactor: 0.80, variance: false },
+  { id: 8,  dest: "小売T社 横浜港北C",      area: "神奈川", route: "神奈川ルートE", vehicle: "4t",  trips: 5, revenue: 450000, distPerTrip: 48, optFactor: 0.72, variance: false },
+  { id: 9,  dest: "食品スーパーU社 川崎DC", area: "神奈川", route: "神奈川ルートE", vehicle: "4t",  trips: 4, revenue: 330000, distPerTrip: 42, optFactor: 0.72, variance: true  },
+  { id: 10, dest: "小売V社 相模原センター", area: "神奈川", route: "神奈川ルートF", vehicle: "2t",  trips: 2, revenue: 160000, distPerTrip: 88, optFactor: 0.82, variance: false },
 ];
 
 // ---- フェーズ別計算ロジック ----
@@ -85,7 +85,7 @@ export default function LogisticsDigitalTwinDashboard() {
   }, [phase, totals]);
 
   // ---- 競合リプレイス脅威度 ----
-  // 競合（ヤマト・佐川）想定見積 = 自社請求額 × 定価係数1.15 × (1 - 割引率)
+  // 競合（A社・B社）想定見積 = 自社請求額 × 定価係数1.15 × (1 - 割引率)
   const competitor = useMemo(() => {
     const quote = Math.round(totals.revenue * 1.15 * (1 - discount / 100));
     const ratio = quote / totals.revenue;
@@ -185,7 +185,7 @@ export default function LogisticsDigitalTwinDashboard() {
         <div className="rounded-xl bg-slate-800/70 border border-slate-700 p-4">
           <div className="flex flex-col md:flex-row md:items-center gap-3">
             <div className="md:w-64">
-              <p className="text-sm font-semibold">競合（ヤマト・佐川）割引率シナリオ</p>
+              <p className="text-sm font-semibold">競合（A社・B社）割引率シナリオ</p>
               <p className="text-xs text-slate-400">定価係数115%からの値引きを想定</p>
             </div>
             <input
