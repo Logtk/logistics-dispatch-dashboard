@@ -36,7 +36,7 @@ npm run preview
 
 ## デモ
 
-GitHub Pagesで公開予定です（デプロイ後にURLを追記します）。
+https://logtk.github.io/logistics-dispatch-dashboard/
 
 ## 注意事項
 
