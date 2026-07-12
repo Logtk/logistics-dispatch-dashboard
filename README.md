@@ -16,8 +16,6 @@
 
 ![screenshot](./docs/screenshot.png)
 
-*(画像は準備中です。`docs/screenshot.png` に差し替えてください)*
-
 ## セットアップ手順
 
 ```bash
